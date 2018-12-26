@@ -1,21 +1,22 @@
 # NodesTest
 
-**TODO: Add description**
+## How to run
 
-## Installation
+1. mix deps.get
+2. iex -S mix
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `nodes_test` to your list of dependencies in `mix.exs`:
+## Commands for test
 
 ```elixir
-def deps do
-  [
-    {:nodes_test, "~> 0.1.0"}
-  ]
-end
-```
+# Run the nodes
+1. NodesTest.NodeManager.start_link # starting the server(only once)
+2. NodesTest.NodeManager.new_node # run the node(multiple times to add some number of nodes)
+# After running this the nodes start leader election. 
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/nodes_test](https://hexdocs.pm/nodes_test).
+# Check the state of the node to see the leader
+NodesTest.Node.get_state(node_name) # node names are initialized automaticaly when creating them (:node1, :node2, etc.)
+
+# To kill the node
+NodesTest.Node.kill_process(pid)
+```
 
