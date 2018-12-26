@@ -33,6 +33,7 @@ defmodule NodesTest.Node do
   end
 
   def send_alive?(pid) do
+    IO.inspect pid, label: "Send alive to"
     GenServer.call(pid, {:alive?})
   end
 
@@ -119,7 +120,6 @@ defmodule NodesTest.Node do
   defp pinging(leader_pid, self_pid) do
     try do
       :ok = ping(leader_pid)
-      IO.inspect self_pid
       Process.send_after(self_pid, :start_ping, 3000)
     catch
       :exit, _ ->
@@ -137,13 +137,13 @@ defmodule NodesTest.Node do
     new_state = Enum.reduce(state, state, fn {p, _}, acc ->
       put_in(acc, [p, :leader], pid)
     end)
+    IO.puts(inspect(self()) <> " Says - Leader is: " <> inspect(pid))
 
     Process.send(self(), :start_ping, [:noconnect])
     {:noreply, new_state}
   end
 
   def handle_info({:finethanks, pid}, state) do
-    IO.inspect "finethanks"
     start_election(pid)
     {:noreply, state}
   end
